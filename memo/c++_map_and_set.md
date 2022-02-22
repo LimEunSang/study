@@ -8,9 +8,9 @@ map, set은 <연관 컨테이너> 이다.**
     3. 탐색, 삽입, 삭제 시간복잡도 : O(logN)
 
 * 차이점
-    container|map|key
+    container|map|set
     :---|:---:|---:
-    저장 원소|pair<key, value>|key를
+    저장 원소|pair<key, value>|key
 
 ## multimap, multiset
 key 중복이 가능한 map, set.
