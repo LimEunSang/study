@@ -1,6 +1,6 @@
 # 자료형과 형 변환
 
-## 템플릿 리터럴
+- ## 템플릿 리터럴
 ```js
 let name = "winterlood";
 let name2 = "이정환";
@@ -10,7 +10,7 @@ console.log(name3);
 
 # 연산자
 
-## 논리 연산자
+- ## 논리 연산자
 ```js
 let compareA = 1 == "1"; // == : 값만 비교
 console.log(compareA); // true
@@ -19,7 +19,7 @@ let compareB = 1 === "1"; // === : 자료형도 비교
 console.log(compareB); // false
 ```
 
-## null 병합 연산자
+- ## null 병합 연산자
 ```js
 let a;
 a = a ?? 10; // null 병합 연산자
@@ -97,13 +97,13 @@ console.log(`${"weight" in person}`);
 
 # 배열
 
-## 배열 선언
+- ## 배열 선언
 ```js
 // let arr = new Array(); // 생성자를 이용하여 선언
 let arr = []; // 배열 리터럴을 이용하여 선언
 ```
 
-## 반복문
+- ## 반복문
 ```js
 let person = {
   name: "이정환",
@@ -124,3 +124,145 @@ for (let i = 0; i < personKeys.length; ++i) {
 }
 ```
 
+- ## forEach
+```js
+const arr = [1, 2, 3, 4];
+const newArr = [];
+
+arr.forEach(function (elm) {
+  console.log(elm);
+}); // 함수 표현식
+
+arr.forEach((elm) => console.log(elm)); // 화살표 함수
+
+arr.forEach((elm) => newArr.push(elm * 2));
+console.log(newArr);
+```
+
+- ## map
+```js
+const arr = [1, 2, 3, 4];
+const newArr = arr.map((elm) => {
+  return elm * 2;
+}); // map은 return이 가능, (중괄호, return) 생략 가능
+
+console.log(newArr);
+```
+
+- ## includes
+```js
+const arr = [1, 2, 3, 4];
+
+let number = 3;
+
+console.log(arr.includes(number));
+```
+
+- ## indexOf
+```js
+const arr = [1, 2, 3, 4];
+
+let number = 3;
+
+console.log(arr.indexOf(number));
+```
+
+- ## findIndex
+```js
+const arr = [
+  { color: "red" },
+  { color: "black" },
+  { color: "blue" },
+  { color: "green" }
+];
+
+console.log(arr.findIndex((elm) => elm.color === "green"));
+```
+
+- ## find
+```js
+const arr = [
+  { color: "red" },
+  { color: "black" },
+  { color: "blue" },
+  { color: "green" }
+];
+
+const idx = arr.findIndex((elm) => elm.color === "green"); // findIndex를 이용한 index 반환
+
+const element = arr.find((elm) => elm.color === "green"); // find를 이용한 element 자체를 반환
+
+console.log(element);
+```
+
+- ## filter
+```js
+const arr = [
+  { num: 1, color: "red" },
+  { num: 2, color: "black" },
+  { num: 3, color: "blue" },
+  { num: 4, color: "green" },
+  { num: 5, color: "blue" }
+];
+
+console.log(arr.filter((elm) => elm.color === "blue"));
+```
+
+- ## slice
+```js
+const arr = [
+  { num: 1, color: "red" },
+  { num: 2, color: "black" },
+  { num: 3, color: "blue" },
+  { num: 4, color: "green" },
+  { num: 5, color: "blue" }
+];
+
+console.log(arr.slice(0, 2)); // begin ~ end-1 반환
+```
+
+- ## concat
+```js
+const arr1 = [
+  { num: 1, color: "red" },
+  { num: 2, color: "black" },
+  { num: 3, color: "blue" }
+];
+
+const arr2 = [
+  { num: 4, color: "green" },
+  { num: 5, color: "blue" }
+];
+
+console.log(arr1.concat(arr2));
+```
+
+- ## sort
+```js
+let chars = ["나", "다", "가"];
+
+let numbers = [0, 1, 3, 2, 10, 30, 20];
+
+const compare = (a, b) => {
+  if (a > b) {
+    return 1;
+  } else if (a < b) {
+    return -1;
+  } else {
+    return 0;
+  }
+};
+
+chars.sort();
+numbers.sort(compare); // 사전순으로 정렬하기 때문에 비교 함수를 직접 만들어 인자로 전달해야 한다
+
+console.log(chars);
+console.log(numbers);
+```
+
+- ## join
+```js
+const arr = ["이정환", "님", "안녕하세요", "또 오셨네요"];
+
+console.log(arr.join(" "));
+```
