@@ -69,7 +69,23 @@ console.log(a, b);
 # Spread 연산자
 - ## 객체에서 사용
 ```js
+const cookie = {
+  base: "cookie",
+  madeIn: "korea"
+};
 
+const chocochipCookie = {
+  ...cookie,
+  toping: "chocochip"
+};
+
+const blueberryCookie = {
+  ...cookie,
+  toping: "chocochip"
+};
+
+console.log(chocochipCookie);
+console.log(blueberryCookie);
 ```
 
 - ## 배열에서 사용
@@ -254,3 +270,63 @@ cPromiseResult.then((c_res) => {
 ```
 
 # async & await - 직관적인 비 동기 처리 코드 작성하기
+- ## async 이해하기
+```js
+async function helloAsync() {
+  return "hello Async";
+}
+// helloAsync -> Promise 객체
+// return 값은 res
+
+helloAsync().then((res) => {
+  console.log(res);
+});
+```
+
+- ## async, await 활용하기
+```js
+function delay(ms) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+}
+
+// async function helloAsync() {
+//   return delay(3000).then(() => {
+//     return "hello async";
+//   });
+// }
+
+async function helloAsync() {
+  await delay(3000);
+  return "hello async";
+}
+
+async function main() {
+  const res = await helloAsync();
+  console.log(res);
+}
+
+main();
+```
+
+# API 호출하기
+```js
+/* fetch -> javascript API 호출 내장함수 */
+// let response = fetch("https://jsonplaceholder.typicode.com/posts").then(
+//   (res) => {
+//     console.log(res);
+//   }
+// );
+/* API의 결과값을 반환x -> API 성공 객체 자체를 반환 */
+/* 마치 편지를 받은 게 아닌 포장된 편지 봉투를 받은 것 */
+
+async function getData() {
+  let rawResponse = await fetch("https://jsonplaceholder.typicode.com/posts");
+  let jsonResponse = await rawResponse.json();
+  console.log(jsonResponse);
+}
+
+getData();
+```
+
