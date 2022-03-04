@@ -92,6 +92,20 @@
     - 하나의 릴레이션에 하나의 의미만 존재할 수 있도록 릴레이션을 분해해 나가는 과정
     - 기본 정규형 : 1NF, 2NF, 3NF, BCNF / 고급 정규형 : 4NF, 5NF
 
+**02. 정규화의 단계**
+- 제1정규형(1NF : Fisrt Normal Form)
+    - 모든 속성은 원자값
+- 제2정규형(2NF : Second Normal Form)
+    - 완전 함수 종속
+- 제3정규형(3NF : Third Normal Form)
+    - 이행적 함수 종속x
+- 보이스 코드 정규형(BCNF : Boyce-Code NF)
+    - 모든 결정자가 후보키
+- 제4정규형(4NF : Four Normal Form)
+    - 모든 속성이 결정자에 함수 종속(FD)
+- 제5정규형(5NF : Five Normal Form)
+    - 모든 조인 종속(Join Dependency)이 릴레이션의 후보키를 통해 성립
+
 ### Section 06. 논리 데이터 모델 품질 검증
 
 **01. 좋은 데이터 모델의 요건**
