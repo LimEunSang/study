@@ -97,9 +97,12 @@ console.log(allCookies);
 ```
 
 # 동기 & 비동기
+- 비동기 작업 : 싱글 쓰레드 방식을 이용하면서, 동기적 작업을 단점으로 극복하기 위해 여러 개의 작업을 동시에 실행시킴. 즉, 먼저 작성된 코드의 결과를 기다리지 않고 다음 코드를 바로 실행함.
+
+- setTimeout(() => {}, n) : n초 뒤에 콜백 함수를 실행시키는 비동기 함수
+
 - ## 비동기 이해하기
 ```js
-// 비동기 처리 함수 setTimeout
 // 비동기 처리의 결과값을 이용해야 할 때 - callback 함수 사용
 function taskA(a, b, cb) {
   setTimeout(() => {
@@ -150,6 +153,7 @@ console.log("코드 끝");
 
 # Promise - 콜백 지옥에서 탈출하기
 - ## Promise
+    - 자바스크립트의 비동기 담당 객체
 ```js
 function isPositive(number, resolve, reject) {
   setTimeout(() => {
@@ -172,8 +176,8 @@ function isPositive(number, resolve, reject) {
 // );
 
 function isPositiveP(number) {
+  // 실행자 : 비동기 작업을 실질적으로 수행하는 함수
   const executor = (resolve, reject) => {
-    // 실행자
     setTimeout(() => {
       if (typeof number === "number") {
         resolve(number >= 0 ? "양수" : "음수");
@@ -183,8 +187,9 @@ function isPositiveP(number) {
     }, 2000);
   };
 
+  // 실행자 실행
   const asyncTask = new Promise(executor);
-  return asyncTask;
+  return asyncTask; // Promise 객체 반환
 }
 
 const res = isPositiveP(101);
@@ -202,6 +207,7 @@ res
 - ## then chaining
 ```js
 function taskA(a, b) {
+  // 위 isPositiveP 함수를 간편화한 코드
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       const res = a + b;
@@ -270,6 +276,8 @@ cPromiseResult.then((c_res) => {
 ```
 
 # async & await - 직관적인 비 동기 처리 코드 작성하기
+ : promise를 더 쉽고 가독성 좋게 작성할 수 있는 기능
+
 - ## async 이해하기
 ```js
 async function helloAsync() {
@@ -297,6 +305,7 @@ function delay(ms) {
 //   });
 // }
 
+// await 키워드를 비동기 함수의 호출 앞에 붙이면 비동기 함수가 동기적으로 동작하게 된다!!
 async function helloAsync() {
   await delay(3000);
   return "hello async";
@@ -329,4 +338,3 @@ async function getData() {
 
 getData();
 ```
-
