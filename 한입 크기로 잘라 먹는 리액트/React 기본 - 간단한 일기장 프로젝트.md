@@ -1,5 +1,6 @@
 # React에서 사용자 입력 처리하기
 **input tag, textarea tag**
+
 *DiaryEditor.js*
 ```js
 import { useState } from "react";
@@ -35,6 +36,7 @@ export default DiaryEditor;
 ```
  
 **위 코드에서 동작이 비슷한 코드 묶기**
+
 ```js
 import { useState } from "react";
 
@@ -76,6 +78,7 @@ export default DiaryEditor;
 ```
 
 **css styling**
+
 *App.css*
 ```js
 .DiaryEditor {
@@ -114,6 +117,7 @@ textarea {
 
 # React에서 배열 사용하기 1 - 리스트 렌더링 (조회)
 **App.js 에서 list 를 생성해 자식 컴포넌트(DiaryList.js)로 데이터를 넘겨주고 자식 컴포넌트는 넘겨 받은 데이터를 렌더링하는 코드**
+
 *App.js*
 ```js
 import "./App.css";
@@ -186,6 +190,7 @@ export default DiaryList;
 ```
 
 위 방식은 DiaryList 데이터를 수정할 때 적절하지 않다. DiaryList 의 요소들을 관리하기 쉽게 DiaryItem.js 를 생성하고 코드를 수정하자.
+
 *DiaryList.js*
 ```js
 import DiaryItem from "./DiaryItem";
