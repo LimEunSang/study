@@ -1,3 +1,255 @@
+# React에서 사용자 입력 처리하기
+**input tag, textarea tag**
+*DiaryEditor.js*
+```js
+import { useState } from "react";
+
+const DiaryEditor = () => {
+  const [author, setAuthor] = useState("");
+  const [content, setContent] = useState("");
+
+  return (
+    <div className="DiaryEditor">
+      <h2>오늘의 일기</h2>
+      <div>
+        <input
+          value={author}
+          onChange={(e) => {
+            setAuthor(e.target.value);
+          }}
+        />
+      </div>
+      <div>
+        <textarea
+          value={content}
+          onChange={(e) => {
+            setContent(e.target.value);
+          }}
+        />
+      </div>
+    </div>
+  );
+};
+
+export default DiaryEditor;
+```
+ 
+**위 코드에서 동작이 비슷한 코드 묶기**
+```js
+import { useState } from "react";
+
+const DiaryEditor = () => {
+  const [state, setState] = useState({
+    author: "",
+    context: "",
+  });
+
+  const handleChangeState = (e) => {
+    setState({
+      ...state,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  return (
+    <div className="DiaryEditor">
+      <h2>오늘의 일기</h2>
+      <div>
+        <input
+          name="author"
+          value={state.author}
+          onChange={handleChangeState}
+        />
+      </div>
+      <div>
+        <textarea
+          name="context"
+          value={state.context}
+          onChange={handleChangeState}
+        />
+      </div>
+    </div>
+  );
+};
+
+export default DiaryEditor;
+```
+
+**css styling**
+*App.css*
+```js
+.DiaryEditor {
+  border: 1px solid gray;
+  text-align: center;
+  padding: 20px;
+}
+
+.DiaryEditor input,
+textarea {
+  margin-bottom: 20px;
+  width: 500px;
+  padding: 10px;
+}
+
+.DiaryEditor textarea {
+  height: 150px;
+}
+
+.DiaryEditor select {
+  width: 300px;
+  padding: 10px;
+  margin-bottom: 20px;
+}
+
+.DiaryEditor button {
+  width: 500px;
+  padding: 10px;
+  cursor: pointer;
+}
+```
+
+# React에서 DOM 조작하기 - useRef
+- React 기능인 useRef 를 사용하여 DOM 요소에 접근할 수 있다.
+- 현재 강의에서는 focus 를 주기 위해 사용
+
+# React에서 배열 사용하기 1 - 리스트 렌더링 (조회)
+**App.js 에서 list 를 생성해 자식 컴포넌트(DiaryList.js)로 데이터를 넘겨주고 자식 컴포넌트는 넘겨 받은 데이터를 렌더링하는 코드**
+*App.js*
+```js
+import "./App.css";
+import DiaryEditor from "./DiaryEditor";
+import DiaryList from "./DiaryList";
+
+const dummyList = [
+  {
+    id: 1,
+    author: "임은상",
+    content: "하이 1",
+    emotion: 5,
+    created_date: new Date().getTime(),
+  },
+  {
+    id: 2,
+    author: "홍길동",
+    content: "하이 2",
+    emotion: 2,
+    created_date: new Date().getTime(),
+  },
+  {
+    id: 3,
+    author: "아무개",
+    content: "하이 3",
+    emotion: 1,
+    created_date: new Date().getTime(),
+  },
+];
+
+function App() {
+  return (
+    <div className="App">
+      <DiaryEditor />
+      <DiaryList diaryList={dummyList} />
+    </div>
+  );
+}
+
+export default App;
+```
+
+*DiaryList.js*
+```js
+const DiaryList = ({ diaryList }) => {
+  return (
+    <div className="DiaryList">
+      <h2>일기 리스트</h2>
+      <h4>{diaryList.length}개의 일기가 있습니다.</h4>
+      <div>
+        {diaryList.map((it) => (
+          <div key={it.id}>
+            <div>작성자 : {it.author}</div>
+            <div>일기 : {it.content}</div>
+            <div>감정 : {it.emotion}</div>
+            <div>작성시간(ms) : {it.created_date}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// diaryList 의 default 값 설정
+DiaryList.defaultProps = {
+  dirayList: [],
+};
+
+export default DiaryList;
+```
+
+위 방식은 DiaryList 데이터를 수정할 때 적절하지 않다. DiaryList 의 요소들을 관리하기 쉽게 DiaryItem.js 를 생성하고 코드를 수정하자.
+*DiaryList.js*
+```js
+import DiaryItem from "./DiaryItem";
+
+const DiaryList = ({ diaryList }) => {
+  return (
+    <div className="DiaryList">
+      <h2>일기 리스트</h2>
+      <h4>{diaryList.length}개의 일기가 있습니다.</h4>
+      <div>
+        {diaryList.map((it) => (
+          <DiaryItem key={it.id} {...it} />
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// diaryList 의 default 값 설정
+DiaryList.defaultProps = {
+  diaryList: [],
+};
+
+export default DiaryList;
+```
+
+*DiaryItem.js*
+```js
+const DiaryItem = ({ author, content, created_date, emotion, id }) => {
+  return (
+    <div className="DiaryItem">
+      <div className="info">
+        <span>
+          작 성 자 : {author} | 감 정 점 수 : {emotion}
+        </span>
+        <br />
+        <span className="date">{new Date(created_date).toLocaleString()}</span>
+      </div>
+      <div className="content">{content}</div>
+    </div>
+  );
+};
+
+export default DiaryItem;
+```
+
+# React에서 배열 사용하기 2 - 데이터 추가하기
+- key concept
+    - `state 끌어올리기`
+    - `단방향 데이터 흐름`
+    - `역방향 이벤트 흐름`
+
+# React에서 배열 사용하기 3 - 데이터 삭제하기
+- `props drilling`
+    - onRemove 함수 : App.js -> DiaryList.js -> DiaryItem.js
+
+# React에서 배열 사용하기 4 - 데이터 수정하기
+**수정 상태를 구별하기 위한 컴포넌트 선언**
+*DiaryItem.js*
+```js
+  const [isEdit, setIsEdit] = useState(false);
+  const toggleIsEdit = () => setIsEdit(!isEdit);
+```
+
 # React Lifecycle 제어하기 - useEffect
 ```js
 import React, { useEffect, useState } from "react";
