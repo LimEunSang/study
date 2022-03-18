@@ -249,6 +249,7 @@ export default DiaryItem;
 
 # React에서 배열 사용하기 4 - 데이터 수정하기
 **수정 상태를 구별하기 위한 컴포넌트 선언**
+
 *DiaryItem.js*
 ```js
   const [isEdit, setIsEdit] = useState(false);
