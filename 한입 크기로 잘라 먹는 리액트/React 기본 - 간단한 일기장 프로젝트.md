@@ -1,6 +1,5 @@
 # React에서 사용자 입력 처리하기
-**input tag, textarea tag**
-
+**input tag, textarea tag**<br>
 *DiaryEditor.js*
 ```js
 import { useState } from "react";
@@ -36,7 +35,6 @@ export default DiaryEditor;
 ```
  
 **위 코드에서 동작이 비슷한 코드 묶기**
-
 ```js
 import { useState } from "react";
 
@@ -77,8 +75,7 @@ const DiaryEditor = () => {
 export default DiaryEditor;
 ```
 
-**css styling**
-
+**css styling**<br>
 *App.css*
 ```js
 .DiaryEditor {
@@ -116,8 +113,7 @@ textarea {
 - 현재 강의에서는 focus 를 주기 위해 사용
 
 # React에서 배열 사용하기 1 - 리스트 렌더링 (조회)
-**App.js 에서 list 를 생성해 자식 컴포넌트(DiaryList.js)로 데이터를 넘겨주고 자식 컴포넌트는 넘겨 받은 데이터를 렌더링하는 코드**
-
+**App.js 에서 list 를 생성해 자식 컴포넌트(DiaryList.js)로 데이터를 넘겨주고 자식 컴포넌트는 넘겨 받은 데이터를 렌더링하는 코드**<br>
 *App.js*
 ```js
 import "./App.css";
@@ -248,8 +244,7 @@ export default DiaryItem;
     - onRemove 함수 : App.js -> DiaryList.js -> DiaryItem.js
 
 # React에서 배열 사용하기 4 - 데이터 수정하기
-**수정 상태를 구별하기 위한 컴포넌트 선언**
-
+**수정 상태를 구별하기 위한 컴포넌트 선언**<br>
 *DiaryItem.js*
 ```js
   const [isEdit, setIsEdit] = useState(false);
@@ -358,7 +353,7 @@ export default Lifecycle;
 - 이번 강의 세부 목표
     - useEffect를 이용하여 컴포넌트 Mount 시점에 API를 호출하고 해당 API의 결과값을 일기 데이터 초기값으로 이용
     
-**API 사용**
+**API 사용**<br>
 *App.js*
 ```js
 const App = () => {
@@ -588,7 +583,7 @@ export default OptimizeTest;
 ```
 
 # 최적화 3 - useCallback
-**함수형 컴포넌트 전체를 React.memo 로 감싸기**
+**함수형 컴포넌트 전체를 React.memo 로 감싸기**<br>
 *DiaryEditor.js*
 ```js
 export default React.memo(DiaryEditor);
@@ -598,7 +593,7 @@ export default React.memo(DiaryEditor);
     - [react docs](https://ko.reactjs.org/docs/hooks-reference.html#usecallback)
     - useMemo 와 다르게 반환하는 값은 callback 함수 그 자체이다.
 
-**useCallback 을 이용한 함수의 재생성, 재생성하면서 항상 최신의 상태를 참조할 수 있도록 도와주는 함수형 업데이트**
+**useCallback 을 이용한 함수의 재생성, 재생성하면서 항상 최신의 상태를 참조할 수 있도록 도와주는 함수형 업데이트**<br>
 *App.js*
 ```js
 const onCreate = useCallback((author, content, emotion) => {
@@ -692,7 +687,7 @@ const Counter = () => {
 };
 ```
 
-**적용하기**
+**적용하기**<br>
 *App.js*
 ```js
 import "./App.css";
@@ -820,7 +815,7 @@ const MyContext = React.createContext(defaultValue);
 </MyContext.Provider>
 ```
 
-**Context API를 이용해 DiaryList에 data 전달하기**
+**Context API를 이용해 DiaryList에 data 전달하기**<br>
 수정 전 *App.js*
 ```js
 return (
@@ -904,9 +899,9 @@ DiaryList.defaultProps = {
 export default DiaryList;
 ```
 
-**Context API를 이용해 DiaryItem 에 onEdit, onRemove 전달하기**
-하나의 Provider 가 모든 데이터를 한 번에 전달하면 자식 컴포넌트 전부에서 redering 이 일어나기 최적화가 이루어지지 않는다.
-따라서 같은 Context 에 중복으로 Privoider 를 선언 후 각각 다른 데이터 전달해야 한다!
+**Context API를 이용해 DiaryItem 에 onEdit, onRemove 전달하기**<br>
+하나의 Provider 가 모든 데이터를 한 번에 전달하면 자식 컴포넌트 전부에서 redering 이 일어나기 최적화가 이루어지지 않는다.<br>
+따라서 같은 Context 에 중복으로 Privoider 를 선언 후 각각 다른 데이터 전달해야 한다!<br>
 *App.js*
 ```js
 const memoizedDispatches = useMemo(() => {
