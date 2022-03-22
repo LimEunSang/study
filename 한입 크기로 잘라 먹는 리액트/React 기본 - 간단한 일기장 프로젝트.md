@@ -257,6 +257,30 @@ export default DiaryItem;
 ```
 
 # React Lifecycle 제어하기 - useEffect
+- `Lifecycle`
+    - React 컴포넌트의 상애 주기 (생명 주기)
+        - 탄생 : 화면에 나타나는 것 : Mount
+        - 변화 : 업데이트(리렌더) : Update
+        - 죽음 : 화면에서 사라짐 : UnMount
+
+- `Lifecycle 을 제어`한다 ?
+    - Lifecycle 의 각 주기에 어떤 작업을 수행시킬 수 있다.
+    - 예시
+        - Mount : 초기화 작업
+        - Update : 예외 처리 작업
+        - UnMount : 메모리 정리 작업
+
+- `React Hooks`
+    - 클래스형 컴포넌트만 쓸 수 있는 기능을 함수형 컴포넌트에서 낚아채서 사용할 수 있는 기능
+    - 'use' keyword 사용
+    - 예시 : useState, useEffect, useRef
+    - Class형 컴포넌트의 길어지는 코드 길이 문제 발생, 중복 코드 / 가독성 문제 등을 해결하기 위해 등장
+
+- useEffect
+    - 첫 번째 인자 "Callback 함수" / 두 번째 인자 "의존성 배열(Dependency Array)"
+    - 의존성 배열 내에 들어있는 값이 변화하면 콜백 함수가 수행된다.
+
+*Lifecycle.js*    
 ```js
 import React, { useEffect, useState } from "react";
 
@@ -331,11 +355,61 @@ export default Lifecycle;
 ```
 
 # React에서 API 호출하기
+- 이번 강의 세부 목표
+    - useEffect를 이용하여 컴포넌트 Mount 시점에 API를 호출하고 해당 API의 결과값을 일기 데이터 초기값으로 이용
+    
+**API 사용**
+*App.js*
+```js
+const App = () => {
+  const getData = async () => {
+    const res = await fetch(
+      "https://jsonplaceholder.typicode.com/comments"
+    ).then((res) => res.json());
+
+    const initData = res.slice(0, 20).map((it) => {
+      return {
+        author: it.email,
+        content: it.body,
+        emotion: Math.floor(Math.random() * 5) + 1,
+        created_date: new Date().getTime(),
+        id: dataId.current++
+      };
+    });
+
+    setData(initData);
+  };
+
+  useEffect(() => {
+    setTimeout(() => {
+      getData();
+    }, 1500);
+  }, []);
+  
+  // onCreate, onEdit, onRemove 함수 생략
+
+  return (
+    <div className="App">
+      <DiaryEditor onCreate={onCreate} />
+      <DiaryList onEdit={onEdit} onRemove={onRemove} diaryList={data} />
+    </div>
+  );
+};
+```
+
+# React developer tools
+ : chrome 확장 프로그램명
+ 
+- 개발자 도구 'Components' tab
+    - components 계층 구조와 데이터 시각화
+- View settings - Hightlight updates when components render
+    - rereder 된 component 강조 기능
 
 # 최적화 1 - useMemo
-- Memoization
+- `Memoization`
     - 이미 계산 해 본 연산 결과를 기억 해 두었다가 동일한 계산을 시키면, 다시 연산하지 않고 기억 해 두었던 데이터를 반환 시키게 하는 방법
 
+*App.js*
 ```js
 const getDiaryAnalysis = useMemo(() => {
   if (data.length === 0) {
@@ -348,14 +422,19 @@ const getDiaryAnalysis = useMemo(() => {
   const goodRatio = (goodCount / data.length) * 100.0;
   return { goodCount, badCount, goodRatio };
 }, [data.length]);
-// 위 두 번째 인자의 값이 바뀌지 않으면 새로 계산을 하지 않고 memoization 기법을 사용
+// useMemo 두 번째 인자의 값이 바뀌지 않으면 새로 계산을 하지 않고 memoization 기법을 사용
+// 첫 번째 인자인 callback 함수를 실행하지 않는다.
+// ! useMemo의 return 값은 함수가 아니라 callback 함수의 return 값(위에선 객체)이다.
 
 const { goodCount, badCount, goodRatio } = getDiaryAnalysis;
 ```
 
 # 최적화 2 - React.memo
- : 함수형 컴포넌트에서 업데이트 조건을 거는 기능 - [react docs](https://ko.reactjs.org/docs/react-api.html#reactmemo)
+- for 컴포넌트 재사용
+    - 부모 컴포넌트가 rerender 되면 관련이 없는 자식 컴포넌트까지 rerender 되는 현상을 막기 위함
+- 함수형 컴포넌트에서 업데이트 조건을 거는 기능 - [react docs](https://ko.reactjs.org/docs/react-api.html#reactmemo)
 
+*OptimizeTest.js*
 ```js
 import React, { useEffect, useState } from "react";
 
@@ -398,7 +477,7 @@ const OptimizeTest = () => {
 export default OptimizeTest;
 ```
 
-- 값이 바뀌지 않았음에도 얕은 복사로 인한 redering 이 일어나는 경우
+**값이 바뀌지 않았음에도 얕은 복사로 인한 redering 이 일어나는 경우**
 ```js
 import React, { useEffect, useState } from "react";
 
@@ -409,7 +488,7 @@ const CounterA = React.memo(({ count }) => {
   return <div>{count}</div>;
 });
 
-// javascript 에서는 객체를 비교할 때 얕은 비교(주소에 의한 비교)를 하기 때문에 redering 한다.
+// 기본적으로 javascript 에서는 객체를 비교할 때 얕은 비교(주소에 의한 비교)를 하기 때문에 redering 한다.
 const CounterB = React.memo(({ obj }) => {
   useEffect(() => {
     console.log(`ConterB update - count: ${obj.count}`);
@@ -450,7 +529,7 @@ const OptimizeTest = () => {
 export default OptimizeTest;
 ```
 
-- 비교 함수를 만들어 rendering 이 일어나지 않게 바꾸기 - [react docs](https://ko.reactjs.org/docs/react-api.html#reactmemo)
+**비교 함수를 만들어 rendering 이 일어나지 않게 바꾸기** - [react docs](https://ko.reactjs.org/docs/react-api.html#reactmemo)
 ```js
 import React, { useEffect, useState } from "react";
 
@@ -509,56 +588,71 @@ export default OptimizeTest;
 ```
 
 # 최적화 3 - useCallback
-- 함수형 컴포넌트 전체를 React.memo 로 감싸기
+**함수형 컴포넌트 전체를 React.memo 로 감싸기**
+*DiaryEditor.js*
 ```js
 export default React.memo(DiaryEditor);
 ```
 
-- useCallback 을 이용한 함수의 재생성, 재생성하면서 항상 최신의 상태를 참조할 수 있도록 도와주는 함수형 업데이트
-- [react docs](https://ko.reactjs.org/docs/hooks-reference.html#usecallback)
+- useCallback
+    - [react docs](https://ko.reactjs.org/docs/hooks-reference.html#usecallback)
+    - useMemo 와 다르게 반환하는 값은 callback 함수 그 자체이다.
 
-**App.js**
+**useCallback 을 이용한 함수의 재생성, 재생성하면서 항상 최신의 상태를 참조할 수 있도록 도와주는 함수형 업데이트**
+*App.js*
 ```js
-  const onCreate = useCallback((author, content, emotion) => {
-    const created_date = new Date().getTime();
-    const newItem = {
-      author,
-      content,
-      emotion,
-      created_date,
-      id: dataId.current,
-    };
-    dataId.current += 1;
-    setData((data) => [newItem, ...data]); // 함수형 업데이트
-  }, []);
+const onCreate = useCallback((author, content, emotion) => {
+  const created_date = new Date().getTime();
+  const newItem = {
+    author,
+    content,
+    emotion,
+    created_date,
+    id: dataId.current,
+  };
+  dataId.current += 1;
+  setData((data) => [newItem, ...data]); // 함수형 업데이트 : 상태변화 함수(setStatus) 함수에 함수를 전달하는 행위
+}, []);
 ```
 
 # 복잡한 상태 관리 로직 분리하기 - useReducer
  : 컴포넌트에서 상태변화 로직을 분리
  
-**기본 형식**
+**useReducer 을 사용하지 않았을 때**
 ```js
 const Counter = () => {
-  // count : state
-  // dispatch : 상태 변화 raise
-  // reducer : 상태 변화 함수
-  // 1 : 초기값
-  const [count, dispatch] = useReducer(reducer, 1);
+  const [count, setCount] = useState(1);
+    
+  const add1 = () => {
+    setCount(count + 1);
+  };
+  const add10 = () => {
+    setCount(count + 10);
+  };
+  const add100 = () => {
+    setCount(count + 100);
+  };
+  const add1000 = () => {
+    setCount(count + 1000);
+  };
+  const add10000 = () => {
+    setCount(count + 10000);
+  };
+}
 
-  return (
-    <div>
-      {count}
-      <!-- { type: 1 } : action 객체 -->
-      <button onClick={() => dispatch({ type: 1 })}>add 1</button>
-      <button onClick={() => dispatch({ type: 10 })}>add 10</button>
-      <button onClick={() => dispatch({ type: 100 })}>add 100</button>
-      <button onClick={() => dispatch({ type: 1000 })}>add 1000</button>
-      <button onClick={() => dispatch({ type: 10000 })}>add 10000</button>
-    </div>
-  );
-};
+return (
+  <div>
+    {count}
+    <button onCLick={add1}>add 1</button>
+    <button onCLick={add10}>add 10</button>
+    <button onCLick={add100}>add 100</button>
+    <button onCLick={add1000}>add 1000</button>
+    <button onCLick={add10000}>add 10000</button>
+  </div>
+);
 ```
-
+ 
+**useReducer 사용 기본 형식**
 ```js
 const reducer = (state, action) => {
   switch (action.type) {
@@ -576,9 +670,30 @@ const reducer = (state, action) => {
       return state;
   }
 };
+
+const Counter = () => {
+  const [count, dispatch] = useReducer(reducer, 1);
+  // count : state
+  // dispatch : 상태 변화 raise 함수
+  // reducer : 상태 변화 처리 함수 (dispatch 가 raise 한 변화를 처리)
+  // 1 : state 의 초기값
+  
+  return (
+    <div>
+      {count}
+      <!-- { type: 1 } : "action 객체", action : "상태 변화" -->
+      <button onClick={() => dispatch({ type: 1 })}>add 1</button>
+      <button onClick={() => dispatch({ type: 10 })}>add 10</button>
+      <button onClick={() => dispatch({ type: 100 })}>add 100</button>
+      <button onClick={() => dispatch({ type: 1000 })}>add 1000</button>
+      <button onClick={() => dispatch({ type: 10000 })}>add 10000</button>
+    </div>
+  );
+};
 ```
 
-**App.js**
+**적용하기**
+*App.js*
 ```js
 import "./App.css";
 import DiaryEditor from "./DiaryEditor";
@@ -681,21 +796,32 @@ export default App;
 ```
 
 # 컴포넌트 트리에 데이터 공급하기 - Context
-- Context API
-    - props drilling 예방
-    - Context(문맥) 생성, 해당 Context 공급자인 Provider 에게 모든 데이터를 직접(↔props drilling) 공급하도록 구현
-    - 기본 문법
-```js
-// Context 생성
-const MyContext = React.createContext(defaultValue);
+- `Provider`
+    - 모든 데이터를 가지고 있는 컴포넌트(ex> <App/>)의 데이터를 전달받아 공급자 역할을 하는 자식 컴포넌트
+    - 자신의 자손에 해당하는 컴포넌트에게 데이터를 직접 전달할 수 있다 - props drilling 예방
 
-// Context Provider 를 통한 데이터 공급
+- `Context`
+    - Provider 가 공급하는 모든 데이터에 접근할 수 있는 컴포넌트의 영역
+
+- Context API
+    - React 에서 문맥 관련한 코드를 쉽게 작성할 수 있도록 돕는 것
+    - Context(문맥) 생성, 해당 Context 공급자인 Provider 에게 모든 데이터를 직접(↔props drilling) 공급하도록 구현
+    - **기본 문법↓**
+    
+**Context 생성**
+```js
+const MyContext = React.createContext(defaultValue);
+```
+
+**Context Provider 를 통한 데이터 공급**
+```js
 <MyContext.Provider value={전역으로 전달하고자하는 값}>
   {/*이 Context 안에 위치할 자식 컴포넌트들*/}
 </MyContext.Provider>
 ```
 
-**수정 전 App.js**
+**Context API를 이용해 DiaryList에 data 전달하기**
+수정 전 *App.js*
 ```js
 return (
     <div className="App">
@@ -709,7 +835,23 @@ return (
 );
 ```
 
-**수정 전 DiaryList.js**
+수정 후 *App.js*
+```js
+return (
+    <DiaryStateContext.Provider value={data}>
+      <div className="App">
+        <DiaryEditor onCreate={onCreate} />
+        <div>전체 일기 : {data.length}</div>
+        <div>기분 좋은 일기 개수 : {goodCount}</div>
+        <div>기분 나쁜 일기 개수 : {badCount}</div>
+        <div>기분 좋은 일기 비율 : {goodRatio}</div>
+        <DiaryList onEdit={onEdit} onRemove={onRemove} />
+      </div>
+    </DiaryStateContext.Provider>
+);
+```
+
+수정 전 *DiaryList.js*
 ```js
 import DiaryItem from "./DiaryItem.js";
 
@@ -734,23 +876,7 @@ DiaryList.defaultProps = {
 export default DiaryList;
 ```
 
-**수정 후 App.js**
-```js
-return (
-    <DiaryStateContext.Provider value={data}>
-      <div className="App">
-        <DiaryEditor onCreate={onCreate} />
-        <div>전체 일기 : {data.length}</div>
-        <div>기분 좋은 일기 개수 : {goodCount}</div>
-        <div>기분 나쁜 일기 개수 : {badCount}</div>
-        <div>기분 좋은 일기 비율 : {goodRatio}</div>
-        <DiaryList onEdit={onEdit} onRemove={onRemove} diaryList={data} />
-      </div>
-    </DiaryStateContext.Provider>
-);
-```
-
-**수정 후 DiaryList.js**
+수정 후 *DiaryList.js*
 ```js
 import { useContext } from "react";
 import { DiaryStateContext } from "./App.js";
@@ -778,9 +904,15 @@ DiaryList.defaultProps = {
 export default DiaryList;
 ```
 
-**onEdit, onRemove 컴포넌트 데이터 전달받기, App.js**
-- 하나의 Provider 에게 전달받기x → 같은 Context 중복 Privoider 선언 후  각각 다른 데이터 전달하기
+**Context API를 이용해 DiaryItem 에 onEdit, onRemove 전달하기**
+하나의 Provider 가 모든 데이터를 한 번에 전달하면 자식 컴포넌트 전부에서 redering 이 일어나기 최적화가 이루어지지 않는다.
+따라서 같은 Context 에 중복으로 Privoider 를 선언 후 각각 다른 데이터 전달해야 한다!
+*App.js*
 ```js
+const memoizedDispatches = useMemo(() => {
+  return { onCreate, onRemove, onEdit };
+}, []);
+  
 return (
     <DiaryStateContext.Provider value={data}>
       <DiaryDispatchContext.Provider value={memoizedDispatches}>
@@ -796,3 +928,5 @@ return (
     </DiaryStateContext.Provider>
 );
 ```
+
+나머지 컴포넌트들의 코드는 결과물 코드 확인!
