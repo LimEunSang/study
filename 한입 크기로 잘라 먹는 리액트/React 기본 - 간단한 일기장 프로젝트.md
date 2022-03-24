@@ -1,3 +1,5 @@
+https://github.com/LimEunSang/simplediary.git
+
 # React에서 사용자 입력 처리하기
 **input tag, textarea tag**
 
