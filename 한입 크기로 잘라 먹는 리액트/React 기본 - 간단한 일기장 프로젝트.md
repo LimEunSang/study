@@ -663,14 +663,14 @@ const reducer = (state, action) => {
   switch (action.type) {
     case 1:
       return state + 1;
-    case 1:
-      return state + 1;
-    case 1:
-      return state + 1;
-    case 1:
-      return state + 1;
-    case 1:
-      return state + 1;
+    case 10:
+      return state + 10;
+    case 100:
+      return state + 100;
+    case 1000:
+      return state + 1000;
+    case 10000:
+      return state + 10000;
     default:
       return state;
   }
