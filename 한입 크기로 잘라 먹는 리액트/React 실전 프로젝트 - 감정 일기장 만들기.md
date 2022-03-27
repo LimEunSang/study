@@ -506,3 +506,94 @@ export default App;
 ```
 
 # 페이지 구현 - 홈(/)
+
+# 페이지 구현 - 일기 쓰기(/new)
+
+# 페이지 구현 - 일기 수정(/edit)
+
+# 페이지 구현 - 일기 상세(/diary)
+
+# (서브 챕터) 흔히 발생하는 버그 수정 하기
+1. key 가 겹치는 문제
+    - dummyData 로 인해 초기 key 값을 dummyData 의 마지막 key 값 + 1 로 설정해야 한다.
+2. 오타("lastest" -> "latest")
+    - typescript ?
+3. 매 월 마지막 날 작성한 일기가 보이지 않는 문제
+    - lastDay 의 날짜 설정 시 시간, 분, 초의 단위도 고려해야 한다.
+    
+# LocalStorage를 일기 데이터베이스로 사용하기
+- `Web Storage API`
+    - https://developer.mozilla.org/ko/docs/Web/API/Web_Storage_API
+    - 브라우저에서 키/값 쌍을 쿠키보다 훨씬 직관적으로 저장할 수 있는 방법을 제공
+    - `sessionStorage` / `localStorage`
+    
+**저장하기**
+
+*App.js*
+```js
+function App() {
+  useEffect(() => {
+    localStorage.setItem("key", 10);
+    // localStorage 에 Item 을 저장하는 코드
+    // Item 의 key = "key", value = 10
+
+    localStorage.setItem("item", JSON.stringify({ value: 30 }));
+    // 객체를 저장할 때는 직렬화 후 저장
+  }, []);
+}
+```
+- 저장된 정보 확인 방법
+    - 개발자 도구 - Application - Local Storage
+    
+**가져오기**
+
+*App.js*
+```js
+function App() {
+  useEffect(() => {
+    const key = localStorage.getItem("key");
+    const item = JSON.parse(localStorage.getItem("item"));
+    // 기본적으로 반환 값은 모두 string 이므로 올바른 형태로 변환해서 받는다.
+    // 객체를 반환 받을 땐 위와 같이 변환해서 받는다.
+    console.log({ key, item });
+  }, []);
+}
+```
+
+# 프로젝트 최적화
+- React.memo, useCallBack
+
+# 배포 준비 & 프로젝트 빌드하기
+- index.html 정보 수정
+    - title 변경, 등
+- page 변경(실제로는 page 를 변경하지 x)할 때 마다 title 바꿔주기
+- 빌드를 위해 필요한 파일과 코드들만 압축하기 (빌드 작업)
+    - "npm run build"
+- 배포하기
+    - "serve -s build"
+    - serve 명령어 다운로드
+        - "npm install -g serve"
+    - Local : 내 컴퓨터에서 접속하는 주소
+    - On Your Network : 나와 같은 공유기를 사용하는 사람들이 접속하는 주소
+    
+# Firebase로 프로젝트 배포하기
+- Firebase 호스팅 설정
+    - https://console.firebase.google.com/u/0/project/winterlood-react-project-76e5c/hosting/sites?hl=ko
+    
+# Open Graph 설정하기
+
+*index.html*
+```html
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <!-- 링크 공유 시 나타나는 -->
+    <meta property="og:image" content="%PUBLIC_URL%/thumbnail.png" /> 
+    <meta property="og:site_name" content="감정 일기장" />
+    <meta property="og:description" content="나만의 작은 감정 일기장" />
+  </head>
+</html>
+```
+
+- 카카오톡 Open Graph 캐시 삭제하기
+    - 카카오 개발자 - 도구 - 초기화 도구 - 로그인 - URL 입력
