@@ -9,5 +9,5 @@ dustink.tistory.com/149<br>
 chobopark.tistory.com/217<br>
 
 **<책 정보>**<br>
-혼자 공부하는 SQL
+혼자 공부하는 SQL<br>
 우재남 지음 | 한빛미디어 | 2021년 11월 01일 출간
