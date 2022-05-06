@@ -121,14 +121,14 @@
 		 name CHAR(4),
 		 age INT);
 	```
-	- 자동 증가 시작값 1000으로 설정, 3씩 증가하도록 설정
-```sql
- ALTER TABLE hongong2 AUTO_INCREAMENT=100;
- SET @@auto_increment_increment=3;
- INSERT INTO hongong2 VALUES (NULL, '토마스', 20);
- INSERT INTO hongong2 VALUES (NULL, '제임스', 23);
- INSERT INTO hongong2 VALUES (NULL, '고든', 25);
-```
+	- 자동 증가 시작값 100으로 설정, 3씩 증가하도록 설정
+	```sql
+	 ALTER TABLE hongong2 AUTO_INCREAMENT=100;
+	 SET @@auto_increment_increment=3;
+	 INSERT INTO hongong2 VALUES (NULL, '토마스', 20);
+	 INSERT INTO hongong2 VALUES (NULL, '제임스', 23);
+	 INSERT INTO hongong2 VALUES (NULL, '고든', 25);
+	```
 
 - INSERT INTO ~ SELECT : 다른 테이블의 데이터를 한 번에 입력
 	- SELECT 문의 열 개수는 INSERT할 테이블의 열 개수와 동일해야 한다.
@@ -185,6 +185,82 @@
 
 ## 04-2 두 테이블을 묶는 조인
 
+### 내부 조인(inner join)
+
+- 기본 형식
+```sql
+ SELECT <열 목록>
+ FROM <첫 번째 테이블>
+	 INNER JOIN <두 번째 테이블>
+	 ON <조인될 조건>
+ [WHERE 검색 조건];
+```
+	
+```sql
+ SELECT *
+ FROM buy
+	 INNER JOIN member
+	 ON buy.id = member.id
+ WHERE buy.id = 'GRL';
+```
+
+- 내부 조인의 간결한 표현 (별칭 사용)
+```sql
+ SELECT B.mem_id, M.mem_id, B.prod_name, M.addr, CONCAT(M.phone1, M.phone2) '연락처'
+ FROM buy B
+	 INNER JOIN member M
+	 ON B.mem_id = M.mem_id
+```
+
+### 외부 조인(outer join)
+ : 두 테이블을 조인할 때 필요한 내용이 한쪽 테이블에만 있어도 결과를 추출할 수 있다.
+
+- 기본 형식
+```sql
+ SELECT <열 목록>
+ FROM <첫 번째 테이블(LEFT 테이블)>
+	 <LEFT | RIGHT | FULL> OUTER JOIN <두 번째 테이블(RIGHT 테이블)>
+	 ON <조인될 조건>
+ [WHERE 검색 조건];
+```
+
+```sql
+ SELECT M.mem_id, M.mem_name, B.prod_name, M.addr
+ FROM member M
+	 LEFT OUTER JOIN buy B
+	 ON M.mem_id = B.mem_id
+ ORDER BY M.mem_id;
+```
+
+### 상호 조인(cross join)
+ : 한쪽 테이블의 모든 행과 다른 쪽 테이블의 모든 행을 조인시키는 기능
+
+```sql
+ SELECT *
+ FROM buy
+	 CROSS JOIN member;
+```
+
+### 자체 조인(self join)
+ : 자신이 자신과 조인
+
+- 기본 형식
+```sql
+ SELECT <열 목록>
+ FROM <테이블> 별칭A
+	 INNER JOIN <테이블> 별칭B
+	 ON <조인될 조건>
+ [WHERE 검색 조건];
+```
+
+- 경리부장 직속 상관의 연락처 검색
+```sql
+ SELECT A.emp "직원", B.emp "직속상관", B.phone "직속상관연락처"
+ FROM emp_table A
+	 INNER JOIN emp_table B
+	 ON A.manager = B.emp
+ WHERE A.emp = '경리부장';
+```
 
 ## 04-3 SQL 프로그래밍
 
