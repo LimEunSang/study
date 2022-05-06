@@ -1,4 +1,4 @@
-**<자료 정보>**<br>
+**<참고 자료 출처>**<br>
 2020, 2021 기출문제<br>
 dustink.tistory.com/149<br>
 chobopark.tistory.com/217<br>
