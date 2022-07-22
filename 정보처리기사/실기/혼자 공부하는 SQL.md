@@ -66,7 +66,7 @@ FROM member;
 	WHERE height >= 164
 	ORDER BY height DESC, debut_date ASC;
 	```
-	- 오름차순 : DESC, 내림차순(기본값) : ASC
+	- 내림차순 : DESC, 오름차순(기본값) : ASC
 	- 반드시 WHERE 절 이후에 나와야 한다.
 
 - LIMIT : 출력 개수 제한
