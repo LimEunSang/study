@@ -52,8 +52,8 @@ FROM member;
 	SELECT name, height
 	FROM member
 	WHERE height > (SELECT height
-					FROM member
-					WHERE name = '에이핑크');
+			 FROM member
+			 WHERE name = '에이핑크');
 	```
 
 ## 03-2 좀 더 깊게 알아보는 SELECT 문
